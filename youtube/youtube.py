@@ -32,7 +32,7 @@ class YouTubeBot(irc.bot.SingleServerIRCBot):
         while True:
             if self.connection.is_connected():
                 self.send_ping()
-            time.sleep(200)  # Send PING 
+            time.sleep(200)  # Send PING every 200 seconds
 
     def send_ping(self):
         self.connection.ping("ping")
@@ -43,6 +43,14 @@ class YouTubeBot(irc.bot.SingleServerIRCBot):
     def on_welcome(self, connection, event):
         connection.join(channel)
         self.channels[channel] = {}
+
+    def on_ctcp(self, connection, event):
+        # Handle CTCP requests: VERSION and PING
+        if event.arguments[0] == 'VERSION':
+            connection.ctcp_reply(event.source.nick, 'VERSION YouTubeBot v1.0')
+        elif event.arguments[0] == 'PING':
+            if len(event.arguments) > 1:
+                connection.ctcp_reply(event.source.nick, 'PING ' + event.arguments[1])
 
     def on_pubmsg(self, connection, event):
         msg = event.arguments[0]
