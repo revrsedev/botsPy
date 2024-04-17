@@ -1,0 +1,18 @@
+Run the bot as service
+
+sudo nano /etc/systemd/system/youtubebot.service
+
+[Unit]
+Description=YouTube IRC Bot Service
+After=network.target
+
+[Service]
+Type=simple
+User=debian
+Group=adm
+WorkingDirectory=/home/debian/x/x/bots_Py/youtube/
+ExecStart=/home/debian/x/x/.env/bin/python3 /home/debian/x/x/bots_Py/youtube/youtube.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

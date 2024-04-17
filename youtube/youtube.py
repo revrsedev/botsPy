@@ -45,7 +45,7 @@ class YouTubeBot(irc.bot.SingleServerIRCBot):
         self.channels[channel] = {}
 
     def on_ctcp(self, connection, event):
-        # Handle CTCP requests: VERSION and PING
+        # CTCP requests: VERSION
         if event.arguments[0] == 'VERSION':
             connection.ctcp_reply(event.source.nick, 'VERSION YouTubeBot v1.0')
         elif event.arguments[0] == 'PING':
