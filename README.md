@@ -1,1 +1,1 @@
-Python irc bots made by me.
+Python irc.bots que hice.
