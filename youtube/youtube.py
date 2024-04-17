@@ -45,17 +45,21 @@ class YouTubeBot(irc.bot.SingleServerIRCBot):
 
     def on_privmsg(self, connection, event):
         nick = event.source.nick
-        hostmask = event.source
+        hostmask = event.source.host
         msg = event.arguments[0]
-        full_identity = f"{nick}!@{hostmask}"
-        
-        if full_identity in authorized_users:
+    
+        if hostmask in authorized_users:
             if msg.startswith("!leave"):
                 channel_name = msg.split()[1]
                 connection.part(channel_name)
                 print(f"Leaving channel {channel_name}")
+            elif msg.startswith("!join"):
+                channel_name = msg.split()[1]
+                connection.join(channel_name)
+                print(f"Joining channel {channel_name}")
         else:
-            print(f"Unauthorized attempt by {full_identity} to use leave command.")
+            print(f"Unauthorized attempt by {hostmask} to use leave or join command.")
+
 
     def process_youtube_links(self, connection, youtube_links):
         for video_id in youtube_links:
