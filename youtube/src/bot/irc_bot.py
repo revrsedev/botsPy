@@ -37,6 +37,13 @@ class CustomYouTubeBot(YouTubeBot):
     def on_pong(self, connection, event):
         print("Received PONG response from server.")
 
+    def on_ctcp(self, connection, event):
+        if event.arguments[0] == "VERSION":
+            print("CTCP VERSION request received")
+            version_reply = f"VERSION YouTube Bot v.1.0"
+            connection.ctcp_reply(event.source.nick, version_reply)
+            print("CTCP VERSION reply sent")
+
     def on_welcome(self, connection, event):
         connection.join(self.channel)
 
