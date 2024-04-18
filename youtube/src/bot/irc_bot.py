@@ -89,6 +89,3 @@ class CustomYouTubeBot(YouTubeBot):
                 print(f"Joining channel {channel_name}")
         else:
             print(f"Unauthorized attempt by {hostmask} to use join command.")
-
-    
-

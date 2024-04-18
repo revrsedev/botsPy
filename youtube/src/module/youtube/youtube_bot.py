@@ -39,4 +39,3 @@ class YouTubeBot(irc.bot.SingleServerIRCBot):
                     connection.privmsg(target_channel, output_message)
             else:
                 print("Error fetching video information.")
-
