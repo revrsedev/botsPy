@@ -6,6 +6,7 @@ Youtube API more information here: https://developers.google.com/youtube/v3/gett
 
 Running the bot:
 
-    * 
+    *   pip install -r requirements.txt
+    *   
 
 License: GNU General Public License
