@@ -2,33 +2,17 @@ import irc.bot
 import re
 import requests
 import isodate
-import threading
-import time
 
 class YouTubeBot(irc.bot.SingleServerIRCBot):
-    def __init__(self, server, port, channel, bot_name, api_key=None):
+    def __init__(self, server, port, channel, bot_name, authorized_users, api_key):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], bot_name, bot_name)
-        self.channels = {}
+        self.channel = channel
+        self.authorized_users = authorized_users
         self.api_key = api_key
         self.youtube_pattern = r"(?:https?://)?(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)([a-zA-Z0-9_-]{11})"
-        self.ping_thread = threading.Thread(target=self.ping_server, daemon=True)
-        self.ping_thread.start()
-
-    def ping_server(self):
-        while True:
-            if self.connection.is_connected():
-                self.send_ping()
-            time.sleep(200)  # Send PING 
-
-    def send_ping(self):
-        self.connection.ping("ping")
-        
-    def on_pong(self, connection, event):
-        print("Received PONG response from server.")
 
     def on_welcome(self, connection, event):
-        connection.join(channel)
-        self.channels[channel] = {}
+        connection.join(self.channel)
 
     def on_pubmsg(self, connection, event):
         msg = event.arguments[0]
@@ -51,7 +35,7 @@ class YouTubeBot(irc.bot.SingleServerIRCBot):
                     minutes, seconds = divmod(duration_human.total_seconds(), 60)
                     duration_str = f"{int(minutes)}m{int(seconds)}s"
                     views = statistics.get("viewCount", "N/A")
-                    output_message = f"\x02\x0301,00You\x0F\x02\x0300,04Tube\x0F {title} - Duration: {duration_str} - Views: {views}"
+                    output_message = f"\x02\x0301,00You\x0F\x02\x0300,04Tube\x0F {title} - Duración: {duration_str} - Visto: {views}"
                     connection.privmsg(target_channel, output_message)
             else:
                 print("Error fetching video information.")
