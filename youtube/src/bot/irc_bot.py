@@ -6,6 +6,11 @@ import threading
 import time
 from src.module.youtube.youtube_bot import YouTubeBot
 from src.config.configuration import ConfigManager
+import datetime
+from src.module.youtube.search_youtube import search_youtube
+import sys
+
+sys.path.append("/home/debian/irc/comlatina/bots_Py/youtube")
 
 config_manager = ConfigManager()
 server, port, channel, bot_name, authorized_users = config_manager.get_irc_settings()
@@ -13,7 +18,10 @@ api_key = config_manager.get_youtube_api_key()
 
 class CustomYouTubeBot(YouTubeBot):
     def __init__(self):
-        YouTubeBot.__init__(self, server, port, channel, bot_name, authorized_users, api_key)
+        config_manager = ConfigManager()
+        server, port, channel, self.bot_name, authorized_users = config_manager.get_irc_settings()
+        api_key = config_manager.get_youtube_api_key()
+        YouTubeBot.__init__(self, server, port, channel, self.bot_name, authorized_users, api_key)
         self.ping_thread = threading.Thread(target=self.ping_server, daemon=True)
         self.ping_thread.start()
 
@@ -47,9 +55,16 @@ class CustomYouTubeBot(YouTubeBot):
 
     def on_pubmsg(self, connection, event):
         msg = event.arguments[0]
-        youtube_links = re.findall(self.youtube_pattern, msg)
-        if youtube_links:
-            self.process_youtube_links(connection, youtube_links, event.target)
+        current_time = datetime.datetime.now().strftime("%H:%M:%S")
+        if msg.startswith("!search"):
+            search_query = msg[len("!search "):].strip()
+            video_url = search_youtube(search_query, self.api_key)
+            formatted_message = f"\x02\x0301,00You\x0F\x02\x0300,04Tube\x0F Mejor resultado: {video_url}"
+            connection.privmsg(self.channel, formatted_message)
+        else:
+            youtube_links = re.findall(self.youtube_pattern, msg)
+            if youtube_links:
+                self.process_youtube_links(connection, youtube_links, event.target)
 
     def leave_channel(self, connection, event):
         nick = event.source.nick
@@ -74,4 +89,6 @@ class CustomYouTubeBot(YouTubeBot):
                 print(f"Joining channel {channel_name}")
         else:
             print(f"Unauthorized attempt by {hostmask} to use join command.")
+
+    
 
