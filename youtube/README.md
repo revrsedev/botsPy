@@ -6,6 +6,6 @@ Youtube API more information here: https://developers.google.com/youtube/v3/gett
 
 Running the bot:
 
-    * * * *
+    * 
 
 License: GNU General Public License
