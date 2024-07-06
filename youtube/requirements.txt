@@ -1,6 +1,6 @@
 autocommand==2.2.2
 backports.tarfile==1.1.0
-certifi==2024.2.2
+certifi==2024.7.4
 charset-normalizer==3.3.2
 configparser==7.0.0
 future==0.18.3
